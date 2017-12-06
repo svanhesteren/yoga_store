@@ -23,10 +23,18 @@
   ]
 }
 
+def show_product(product)
+  if product
+    return "Ref. number: #{product[:reference_number]},  name: #{product[:name]},  price: #{product[:price]}"
+  end
+end
+
 def show_cart_contents
 
   puts "Shopping cart contents:\n"
-  print @shopping_cart
+  for product in @shopping_cart
+    puts "- #{show_product(product)}"
+  end
 
 end
 
@@ -42,9 +50,7 @@ end
 
 def checkout
   puts "Thank you very much."
-
   puts "total amount spent: #{add_prices}"
-
 
 end
 
@@ -53,7 +59,6 @@ def add_prices
   for product in @shopping_cart
     total += product[:price].to_i
   end
-
   return total
 
 end
@@ -63,7 +68,7 @@ def shop
   puts "Welcome to our store!"
   puts "Our currents departments are: "
   puts
-  @departments.each_with_index{|department, index|
+  @departments.each_with_index{ |department, index|
     puts "#{index+1}) #{department}"
   }
   puts
@@ -74,14 +79,14 @@ def shop
 
     chosen_department = @departments[chosen_department_index - 1]
     products_list = @products[chosen_department.to_sym]
-    # print products_list
+
 
     puts "Chosen department is: #{chosen_department}"
     puts
     puts "Our products in this department are: "
 
     products_list.each_with_index{ |product, index|
-      puts "#{index+1}) Ref: #{product[:reference_number]} name: #{product[:name]} price: #{product[:price]}"
+      puts "#{index+1}) #{show_product(product)}"
     }
 
     puts
@@ -90,10 +95,8 @@ def shop
 
     if chosen_product_index > 0 && chosen_product_index < products_list.length+1
       chosen_product = products_list[chosen_product_index-1]
-      # puts chosen_product
 
-
-      puts "You are buying: #{chosen_product}"
+      puts "You are buying: #{show_product(chosen_product)}\n"
 
       @shopping_cart << chosen_product
 
