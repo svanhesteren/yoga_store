@@ -23,12 +23,86 @@
   ]
 }
 
-puts "Welcome to our store!"
-puts "Our currents departments are: "
-puts
-@departments.each_with_index{|department, index|
-  puts "#{index+1}) #{department}"
-}
-puts
-puts "Select a department you wish to visit: "
-chosen_department = gets.to_i
+def show_cart_contents
+
+  puts "Shopping cart contents:\n"
+  print @shopping_cart
+
+end
+
+def ask_continue
+  puts "\nDo you want to continue? (Y/N)"
+  input = gets.chomp.upcase
+  if input == "Y"
+    shop
+  elsif input == "N"
+    checkout
+  end
+end
+
+def checkout
+  puts "Thank you very much."
+
+  puts "total amount spent: #{add_prices}"
+
+
+end
+
+def add_prices
+  total = 0
+  for product in @shopping_cart
+    total += product[:price].to_i
+  end
+
+  return total
+
+end
+
+
+def shop
+  puts "Welcome to our store!"
+  puts "Our currents departments are: "
+  puts
+  @departments.each_with_index{|department, index|
+    puts "#{index+1}) #{department}"
+  }
+  puts
+  puts "Select a department you wish to visit: "
+  chosen_department_index = gets.to_i
+
+  if chosen_department_index > 0 && chosen_department_index < 5
+
+    chosen_department = @departments[chosen_department_index - 1]
+    products_list = @products[chosen_department.to_sym]
+    # print products_list
+
+    puts "Chosen department is: #{chosen_department}"
+    puts
+    puts "Our products in this department are: "
+
+    products_list.each_with_index{ |product, index|
+      puts "#{index+1}) Ref: #{product[:reference_number]} name: #{product[:name]} price: #{product[:price]}"
+    }
+
+    puts
+    puts "Select a product you wish to buy: "
+    chosen_product_index = gets.to_i
+
+    if chosen_product_index > 0 && chosen_product_index < products_list.length+1
+      chosen_product = products_list[chosen_product_index-1]
+      # puts chosen_product
+
+
+      puts "You are buying: #{chosen_product}"
+
+      @shopping_cart << chosen_product
+
+      show_cart_contents
+
+      ask_continue
+    end
+
+  end
+end
+
+shop
